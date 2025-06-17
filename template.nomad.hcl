@@ -50,7 +50,7 @@ job "transcribe" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/ast21/transcribe:main"
+        image = "ghcr.io/ast21/transcribe:${IMAGE_TAG}"
         auth {
           username = "ast21"
           password = "${GITHUB_TOKEN}"
