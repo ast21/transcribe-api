@@ -17,6 +17,12 @@ job "transcribe" {
       }
     }
 
+    volume "transcribe_cache" {
+      type      = "host"
+      source    = "transcribe_cache"
+      read_only = false
+    }
+
     service {
       tags = [
         "traefik.enable=true",
