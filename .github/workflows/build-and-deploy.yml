@@ -8,6 +8,8 @@ env:
   NOMAD_VERSION: 1.9.7
   NOMAD_ADDR: ${{ secrets.NOMAD_ADDR }}
   NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+  DOMAIN: ${{ vars.DOMAIN }}
+
 
 jobs:
   build:
@@ -51,9 +53,10 @@ jobs:
 
       - name: Generate Nomad file from template
         run: |
+          export DOMAIN=${{ vars.DOMAIN }}
           export IMAGE=ghcr.io/${{ github.repository }}
           export IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
-          envsubst '$IMAGE $IMAGE_TAG' < template.nomad.hcl > job.nomad.hcl
+          envsubst '$DOMAIN $IMAGE $IMAGE_TAG' < template.nomad.hcl > job.nomad.hcl
 
       - name: Run Nomad job
         run: nomad run job.nomad.hcl

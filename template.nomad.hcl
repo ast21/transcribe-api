@@ -1,6 +1,6 @@
 # Using envsubst inside github actions
 locals {
-  domain    = "transcribe.l80.ru"
+  domain    = "${DOMAIN}"
   image     = "${IMAGE}"
   image_tag = "${IMAGE_TAG}"
 }
