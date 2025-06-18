@@ -1,6 +1,11 @@
 job "transcribe" {
   datacenters = ["de1"]
 
+  locals {
+    domain = "transcribe.l80.ru"
+    image  = "ghcr.io/ast21/transcribe-api"
+  }
+
   meta {
     image_tag        = "${IMAGE_TAG}"
     deploy_timestamp = "${DEPLOY_TIMESTAMP}"
@@ -26,9 +31,9 @@ job "transcribe" {
     service {
       tags = [
         "traefik.enable=true",
-        "traefik.http.routers.transcribe.rule=Host(`${DOMAIN}`)",
-        "traefik.http.routers.transcribe.tls=true",
-        "traefik.http.routers.transcribe.tls.certresolver=leRes",
+        "traefik.http.routers.${NOMAD_JOB_NAME}.rule=Host(`${local.domain}`)",
+        "traefik.http.routers.${NOMAD_JOB_NAME}.tls=true",
+        "traefik.http.routers.${NOMAD_JOB_NAME}.tls.certresolver=leRes",
       ]
 
       port = "http"
@@ -50,9 +55,9 @@ job "transcribe" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/ast21/transcribe-api:${IMAGE_TAG}"
+        image = "${local.image}:${IMAGE_TAG}"
         auth {
-          username = "ast21"
+          username = "${GITHUB_USER}"
           password = "${GITHUB_TOKEN}"
         }
 
@@ -67,7 +72,7 @@ job "transcribe" {
 
       template {
         data        = <<EOF
-DOMAIN="{{ with secret "secret/data/transcribe" }}{{ .Data.data.DOMAIN }}{{ end }}"
+GITHUB_USER="{{ with secret "secret/data/auth" }}{{ .Data.data.GITHUB_USER }}{{ end }}"
 GITHUB_TOKEN="{{ with secret "secret/data/auth" }}{{ .Data.data.GITHUB_TOKEN }}{{ end }}"
 EOF
         destination = "secrets/env"
