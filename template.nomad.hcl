@@ -1,14 +1,16 @@
 locals {
-  domain = "transcribe.l80.ru"
-  image  = "ghcr.io/ast21/transcribe-api"
+  domain           = "transcribe.l80.ru"
+  image            = "ghcr.io/ast21/transcribe-api"
+  image_tag        = "${IMAGE_TAG}"
+  deploy_timestamp = "${DEPLOY_TIMESTAMP}"
 }
 
 job "transcribe" {
   datacenters = ["de1"]
 
   meta {
-    image_tag        = "${IMAGE_TAG}"
-    deploy_timestamp = "${DEPLOY_TIMESTAMP}"
+    image_tag        = "${local.image_tag}"
+    deploy_timestamp = "${local.deploy_timestamp}"
   }
 
   group "svc" {
@@ -55,7 +57,7 @@ job "transcribe" {
       driver = "docker"
 
       config {
-        image = "${local.image}:${IMAGE_TAG}"
+        image = "${local.image}:${local.image_tag}"
         auth {
           username = "${GITHUB_USER}"
           password = "${GITHUB_TOKEN}"
