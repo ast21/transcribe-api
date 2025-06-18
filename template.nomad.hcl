@@ -1,5 +1,5 @@
 job "transcribe" {
-  datacenters = ["${DATACENTER}"]
+  datacenters = ["de1"]
 
   meta {
     image_tag        = "${IMAGE_TAG}"
@@ -68,7 +68,6 @@ job "transcribe" {
       template {
         data        = <<EOF
 DOMAIN="{{ with secret "secret/data/transcribe" }}{{ .Data.data.DOMAIN }}{{ end }}"
-DATACENTER="{{ with secret "secret/data/transcribe" }}{{ .Data.data.DATACENTER }}{{ end }}"
 GITHUB_TOKEN="{{ with secret "secret/data/auth" }}{{ .Data.data.GITHUB_TOKEN }}{{ end }}"
 EOF
         destination = "secrets/env"
