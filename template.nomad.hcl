@@ -1,10 +1,10 @@
+locals {
+  domain = "transcribe.l80.ru"
+  image  = "ghcr.io/ast21/transcribe-api"
+}
+
 job "transcribe" {
   datacenters = ["de1"]
-
-  locals {
-    domain = "transcribe.l80.ru"
-    image  = "ghcr.io/ast21/transcribe-api"
-  }
 
   meta {
     image_tag        = "${IMAGE_TAG}"
