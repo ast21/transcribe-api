@@ -1,5 +1,5 @@
 job "transcribe" {
-  datacenters = ["de1"]
+  datacenters = ["${DATACENTER}"]
 
   meta {
     image_tag        = "${IMAGE_TAG}"
@@ -26,7 +26,7 @@ job "transcribe" {
     service {
       tags = [
         "traefik.enable=true",
-        "traefik.http.routers.transcribe.rule=Host(`transcribe.l80.ru`)",
+        "traefik.http.routers.transcribe.rule=Host(`${DOMAIN}`)",
         "traefik.http.routers.transcribe.tls=true",
         "traefik.http.routers.transcribe.tls.certresolver=leRes",
       ]
@@ -67,6 +67,8 @@ job "transcribe" {
 
       template {
         data        = <<EOF
+DOMAIN="{{ with secret "secret/data/transcribe" }}{{ .Data.data.DOMAIN }}{{ end }}"
+DATACENTER="{{ with secret "secret/data/transcribe" }}{{ .Data.data.DATACENTER }}{{ end }}"
 GITHUB_TOKEN="{{ with secret "secret/data/auth" }}{{ .Data.data.GITHUB_TOKEN }}{{ end }}"
 EOF
         destination = "secrets/env"
