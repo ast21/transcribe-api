@@ -1,16 +1,15 @@
+# Using envsubst inside github actions
 locals {
-  domain           = "transcribe.l80.ru"
-  image            = "ghcr.io/ast21/transcribe-api"
-  image_tag        = "${IMAGE_TAG}"
-  deploy_timestamp = "${DEPLOY_TIMESTAMP}"
+  domain    = "transcribe.l80.ru"
+  image     = "${IMAGE}"
+  image_tag = "${IMAGE_TAG}"
 }
 
 job "transcribe" {
   datacenters = ["de1"]
 
   meta {
-    image_tag        = "${local.image_tag}"
-    deploy_timestamp = "${local.deploy_timestamp}"
+    image_tag = "${local.image_tag}"
   }
 
   group "svc" {

@@ -51,9 +51,9 @@ jobs:
 
       - name: Generate Nomad file from template
         run: |
+          export IMAGE=ghcr.io/${{ github.repository }}
           export IMAGE_TAG=${{ steps.vars.outputs.image_tag }}
-          export DEPLOY_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          envsubst '$IMAGE_TAG $DEPLOY_TIMESTAMP' < template.nomad.hcl > job.nomad.hcl
+          envsubst '$IMAGE $IMAGE_TAG' < template.nomad.hcl > job.nomad.hcl
 
       - name: Run Nomad job
         run: nomad run job.nomad.hcl
